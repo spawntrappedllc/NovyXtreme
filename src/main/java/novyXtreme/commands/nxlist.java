@@ -39,10 +39,10 @@ public class nxlist implements CommandExecutor {
             return true;
         } else if (sender.hasPermission("novyxtreme.nxlistown")) {
             if (args.length >= 1 && args[0].contains("-v")) {
-                sender.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + dbFunctions.getStargateListFromOwnerVerbose(sender.getName()));
+                sender.sendMessage(dbFunctions.getStargateListFromOwnerVerbose(sender.getName()));
 
             } else {
-                sender.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + dbFunctions.getStargateListFromOwner(sender.getName()));
+                sender.sendMessage(dbFunctions.getStargateListFromOwner(sender.getName()));
             }
 
             //dbFunctions.getStargateListToString();

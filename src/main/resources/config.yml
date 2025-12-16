@@ -1,4 +1,4 @@
 MaxStargatesPerPlayer: 1
 MaxPremiumStargatesPerPlayer: 3
-MinimumStargateDistance: 100
+MinimumStargateDistance: 30
 Active-Stargate-Timeout-Ticks: 800
