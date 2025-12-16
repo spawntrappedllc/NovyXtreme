@@ -53,7 +53,6 @@ public final class NovyXtreme extends JavaPlugin {
     //Set up economy based on Vault
     private boolean setupEconomy() {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
-
             return false;
         }
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);

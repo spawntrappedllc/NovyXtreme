@@ -65,7 +65,7 @@ public class nxcomplete implements CommandExecutor {
                 if(closestStargate != null){
                     if (closestStargate.getTpCoordinates().distance(teleportBlock) < minimumStargateDistance){
                         String closestGateName = closestStargate.getName();
-                        p.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Stargate is too close to other gate: " + closestGateName);
+                        p.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Stargate is too close to another gate");
                         return true;
                     }
                 }

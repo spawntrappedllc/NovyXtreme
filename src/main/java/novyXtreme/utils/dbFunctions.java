@@ -55,35 +55,6 @@ public class dbFunctions {
         }
         return null;
     }
-    public static String getTopGates(Integer page)
-    {
-        // Set page to 1 if no page specified
-        if(page == null){page=1;}
-        int rank =1;
-
-        // sets which rank page should start/end on
-        int pageStart = (page*10)-9;
-        int pageEnd = pageStart+10;
-        Stargate currentGate;
-
-        ArrayList<Stargate> sortedStargates = stargates;
-        // Response Headers
-        String topGatesList = ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY +"Top Stargates" + " (Rank | Name | Owner | Visited)";
-
-            sortedStargates.sort(Comparator.comparingInt(Stargate::getTimesVisited).reversed());
-            for(int i = pageStart;i<pageEnd;i++)
-            {
-                try {
-                    currentGate = sortedStargates.get(i - 1);
-                }catch(IndexOutOfBoundsException e){break;} //exit the loop when index is out of bounds
-
-                topGatesList += "\n"+ChatColor.GREEN + "#" + i + ChatColor.GRAY + " | " + currentGate.getName() + " | " + currentGate.getOwner() + " | " + currentGate.getTimesVisited();
-            }
-            topGatesList += "\n"+"Page: "+page;
-
-
-        return topGatesList;
-    }
 
     public static Stargate getGatebyName(String gateName) {
         Stargate foundGate = null;
