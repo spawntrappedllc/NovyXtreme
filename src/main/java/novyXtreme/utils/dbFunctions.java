@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import novyXtreme.Stargate;
@@ -159,6 +160,63 @@ public class dbFunctions {
             }
         }
         return stargateListString;
+    }
+
+    public static int getStargateCountByOwner(String ownerName) {
+        int count = 0;
+        if (ownerName == null) return 0;
+        for (Stargate s : stargates) {
+            if (s.getOwner() != null && s.getOwner().equalsIgnoreCase(ownerName)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public static boolean isOwnedBy(String playerName, String gateName) {
+        if (playerName == null || gateName == null) return false;
+
+        Stargate gate = getGatebyName(gateName);
+        if (gate == null) return false;
+
+        String owner = gate.getOwner();
+        return owner != null && owner.equalsIgnoreCase(playerName);
+    }
+
+    /**
+     * Removes all stargates owned by ownerName except the gate with name keepGateName.
+     */
+    public static void removeAllGatesForOwnerExcept(String ownerName, String keepGateName) {
+        if (ownerName == null) return;
+
+        Iterator<Stargate> it = stargates.iterator();
+        while (it.hasNext()) {
+            Stargate s = it.next();
+            if (s.getOwner() != null && s.getOwner().equalsIgnoreCase(ownerName) && !s.getName().equals(keepGateName)) {
+                // Deactivate active gates
+                try {
+                    if (s.isActive()) {
+                        s.setActive(false);
+                    }
+                } catch (Exception ignored) {}
+
+                // Break gate sign
+                try {
+                    if (s.getSignBlockLocation() != null) {
+                        s.getSignBlockLocation().getBlock().setType(Material.AIR);
+                    }
+                } catch (Exception ignored) {}
+
+                // inform player
+                if (Bukkit.getPlayer(s.getOwner()) != null) {
+                    Bukkit.getPlayer(s.getOwner()).sendMessage(
+                            ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY +
+                                    "One of your extra stargates (" + s.getName() + ") was removed because you no longer have premium."
+                    );
+                }
+                it.remove();
+            }
+        }
     }
 
     public static boolean removeGateByName(String gatename) {

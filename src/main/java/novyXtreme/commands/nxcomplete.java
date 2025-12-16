@@ -21,7 +21,6 @@ import java.util.List;
 
 public class nxcomplete implements CommandExecutor {
     Plugin plugin = NovyXtreme.getPlugin(NovyXtreme.class);
-    int stargateCost = plugin.getConfig().getInt("StargateCost");
     double minimumStargateDistance = plugin.getConfig().getDouble("MinimumStargateDistance");
 
 
@@ -55,6 +54,30 @@ public class nxcomplete implements CommandExecutor {
                 return true;
             }
 
+
+            // Stargate limit
+            int defaultMax = plugin.getConfig().contains("MaxStargatesPerPlayer")
+                    ? plugin.getConfig().getInt("MaxStargatesPerPlayer")
+                    : 1;
+
+            int maxPremium = plugin.getConfig().contains("MaxPremiumStargatesPerPlayer")
+                    ? plugin.getConfig().getInt("MaxPremiumStargatesPerPlayer")
+                    : 3;
+
+            boolean bypassPermission = p.hasPermission("novyxtreme.bypass.maxstargates");
+            boolean hasPremium = p.hasPermission("novyxtreme.premium");
+
+            // choose the allowed amount depending on premium
+            int allowed = hasPremium ? maxPremium : defaultMax;
+
+            int owned = dbFunctions.getStargateCountByOwner(p.getName());
+            if (!bypassPermission && owned >= allowed) {
+                p.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY
+                        + "You already own the maximum number of stargates (" + allowed + ").");
+                return true;
+            }
+
+
             //Assign directional interface to leverblock for directional shenanigans
             Directional leverBlockData = (Directional) leverblock.getBlockData();
             Location teleportBlock = stargateUtils.calcTeleportBlock(leverblock.getLocation(), leverBlockData.getFacing());
@@ -64,28 +87,13 @@ public class nxcomplete implements CommandExecutor {
             if (dbFunctions.getGatebyName(GateName) == null) {
                 if(closestStargate != null){
                     if (closestStargate.getTpCoordinates().distance(teleportBlock) < minimumStargateDistance){
-                        String closestGateName = closestStargate.getName();
                         p.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Stargate is too close to another gate");
                         return true;
                     }
                 }
-                Economy economy = NovyXtreme.getEconomy();
-                EconomyResponse response = economy.withdrawPlayer(p, stargateCost);
-
-                //Player transaction complete
-                if (response.transactionSuccess()) {
-                    p.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Stargate successfully created!");
-                    Stargate newStargate = new Stargate(GateName, p.getName(), leverblock.getLocation(), leverBlockData.getFacing());
-                    activationUtil.nxcompleteEnd(p);
-                    if (stargateCost > 0) {
-                        p.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + stargateCost + "p was deducted from your account.");
-                    }
-
-                } else {
-                    //Player doesn't have enough monies
-                    p.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Could not create stargate: You lack the required funds (" + stargateCost + "p)");
-                    p.sendMessage(response.errorMessage);
-                }
+                p.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Stargate successfully created!");
+                Stargate newStargate = new Stargate(GateName, p.getName(), leverblock.getLocation(), leverBlockData.getFacing());
+                activationUtil.nxcompleteEnd(p);
                 return true;
 
             } else {

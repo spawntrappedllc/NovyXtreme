@@ -24,6 +24,14 @@ public class dial implements CommandExecutor
                 entranceGate = dbFunctions.getActivatedGate(sender.getName());
                 if(entranceGate != null)
                 {
+                    boolean hasPremium = player.hasPermission("novyxtreme.premium");
+
+                    if (!hasPremium
+                            && entranceGate.getOwner() != null
+                            && entranceGate.getOwner().equalsIgnoreCase(player.getName())) {
+                        dbFunctions.removeAllGatesForOwnerExcept(player.getName(), entranceGate.getName());
+                    }
+
                     if(args.length != 1){sender.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Must specify stargate name!"); return true;}
                     if(entranceGate.getDestinationGate() != null){player.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "You already have an active portal!");return true;}
                     Stargate destinationStargate = dbFunctions.getGatebyName(args[0]);

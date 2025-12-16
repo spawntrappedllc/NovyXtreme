@@ -1,3 +1,4 @@
-StargateCost: 0
+MaxStargatesPerPlayer: 1
+MaxPremiumStargatesPerPlayer: 3
 MinimumStargateDistance: 100
 Active-Stargate-Timeout-Ticks: 800
