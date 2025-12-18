@@ -208,10 +208,11 @@ public class dbFunctions {
                 } catch (Exception ignored) {}
 
                 // inform player
-                if (Bukkit.getPlayer(s.getOwner()) != null) {
-                    Bukkit.getPlayer(s.getOwner()).sendMessage(
-                            ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY +
-                                    "One of your extra stargates (" + s.getName() + ") was removed because you no longer have premium."
+                Player owner = Bukkit.getPlayer(s.getOwner());
+                if (owner != null) {
+                    messageUtils.sendMessage(
+                            "One of your extra stargates (" + s.getName() + ") was removed because you no longer have premium.",
+                            owner
                     );
                 }
                 it.remove();
@@ -221,36 +222,29 @@ public class dbFunctions {
 
     public static boolean removeGateByName(String gatename) {
         for (Stargate stargate : stargates) {
-            EconomyResponse response;
-            // Refund player when gate is destroyed/removed
             if (stargate.getName().equals(gatename)) {
-                Economy economy = NovyXtreme.getEconomy();
-                if (Bukkit.getPlayer(stargate.getOwner()) != null) {
-                    response = economy.depositPlayer(Bukkit.getPlayer(stargate.getOwner()), stargateCost);
-                } else {
-                    response = economy.depositPlayer(Bukkit.getOfflinePlayer(stargate.getOwner()), stargateCost);
+                if (stargate.isActive()) {
+                    stargate.setActive(false);
                 }
 
-                if (response.transactionSuccess()) {
-                    if (stargate.isActive()) {
-                        stargate.setActive(false);
-                    }
-                    // Break sign when stargate is destroyed/removed
-                    stargate.getSignBlockLocation().getBlock().setType(Material.AIR);
-                    if (Bukkit.getPlayer(stargate.getOwner()) != null) {
-                        Bukkit.getPlayer(stargate.getOwner()).sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Gate: " + stargate.getName() + " destroyed, you received " + stargateCost + "p refund");
-                    }
+                // Break sign when stargate is destroyed/removed
+                stargate.getSignBlockLocation().getBlock().setType(Material.AIR);
 
-                    stargates.remove(stargate);
-
-                } else {
-                    Bukkit.getPlayer(stargate.getOwner()).sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Transaction Error");
+                Player owner = Bukkit.getPlayer(stargate.getOwner());
+                if (owner != null) {
+                    messageUtils.sendMessage(
+                            "Gate: " + stargate.getName() + " destroyed",
+                            owner
+                    );
                 }
+
+                stargates.remove(stargate);
                 return true;
             }
         }
         return false;
     }
+
     // Disable all gates, used by /nxforce
     public static boolean deactivateAllGates() {
         Stargate activegate;
