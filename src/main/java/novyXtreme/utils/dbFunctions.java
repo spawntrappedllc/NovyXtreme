@@ -119,12 +119,12 @@ public class dbFunctions {
         String stargateListString = null;
 
         if (ownerName == null) {
-            stargateListString = ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Stargates ( Name | Owner | Times Visited | TpCoords )" ;
+            stargateListString = "Stargates ( Name | Owner | Times Visited | TpCoords )" ;
             for (Stargate stargate : stargates) {
                 stargateListString = stargateListString + "\n"+ChatColor.GRAY + stargate.getName() + ChatColor.DARK_GRAY + " | " + ChatColor.GRAY + stargate.getOwner() + ChatColor.DARK_GRAY + " | " + ChatColor.GRAY + stargate.getTimesVisited() + ChatColor.DARK_GRAY + " | " + ChatColor.GRAY + "( " + stargate.getTpCoordinates().getBlockX() + "," + stargate.getTpCoordinates().getBlockY() + "," + stargate.getTpCoordinates().getBlockZ() + " )";
             }
         } else {
-            stargateListString = ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Stargates Owned by " + ownerName + ":";
+            stargateListString = "Stargates Owned by " + ownerName + ":";
             for (Stargate stargate : stargates) {
                 if (stargate.getOwner().equals(ownerName)) {
                     stargateListString = stargateListString + "\n"+ChatColor.GRAY + "Name: " + stargate.getName();
@@ -135,7 +135,7 @@ public class dbFunctions {
     }
 
     public static String getStargateListToString() {
-        String stargateListString = ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Stargates ( Name | Owner )";
+        String stargateListString = "Stargates ( Name | Owner )";
         for (Stargate stargate : stargates) {
             stargateListString = stargateListString + "\n" + ChatColor.GRAY + stargate.getName() + ChatColor.DARK_GRAY + " | " + ChatColor.GRAY + stargate.getOwner();
         }
@@ -143,7 +143,7 @@ public class dbFunctions {
     }
 
     public static String getStargateListFromOwnerVerbose(String ownerName) {
-        String stargateListString = ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Stargates Owned by " + ownerName + " ( Name | Times Visited | TpCoords )";
+        String stargateListString = "Stargates Owned by " + ownerName + " ( Name | Times Visited | TpCoords )";
         for (Stargate stargate : stargates) {
             if (stargate.getOwner().equals(ownerName)) {
                 stargateListString = stargateListString + "\n" + ChatColor.GRAY + stargate.getName() + ChatColor.DARK_GRAY + " | " + ChatColor.GRAY + stargate.getTimesVisited() + ChatColor.DARK_GRAY + " | " + ChatColor.GRAY + "( " + stargate.getTpCoordinates().getBlockX() + "," + stargate.getTpCoordinates().getBlockY() + "," + stargate.getTpCoordinates().getBlockZ() + " )";
@@ -153,7 +153,7 @@ public class dbFunctions {
     }
 
     public static String getStargateListFromOwner(String ownerName) {
-        String stargateListString = ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Stargates Owned by " + ownerName + ":";
+        String stargateListString = "Stargates Owned by " + ownerName + ":";
         for (Stargate stargate : stargates) {
             if (stargate.getOwner().equals(ownerName)) {
                 stargateListString = stargateListString + "\n" +ChatColor.GRAY + ChatColor.GRAY + stargate.getName();

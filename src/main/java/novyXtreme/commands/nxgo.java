@@ -2,6 +2,7 @@ package novyXtreme.commands;
 
 import novyXtreme.Stargate;
 import novyXtreme.utils.dbFunctions;
+import novyXtreme.utils.messageUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -22,10 +23,10 @@ public class nxgo implements CommandExecutor {
                     //destinationStargate.setTimesVisited(destinationStargate.getTimesVisited() + 1);
 
                 } catch (NullPointerException e) {
-                    sender.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "No gate by that name found!");
+                    messageUtils.sendMessage("No gate by that name found!", player);
                 }
             } else {
-                sender.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "You do not have permission to use that command!");
+                messageUtils.sendMessage("You do not have permission to use that command!", player);
             }
         }
         return true;

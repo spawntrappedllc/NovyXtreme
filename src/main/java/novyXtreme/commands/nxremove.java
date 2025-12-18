@@ -1,6 +1,7 @@
 package novyXtreme.commands;
 
 import novyXtreme.utils.dbFunctions;
+import novyXtreme.utils.messageUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -15,16 +16,16 @@ public class nxremove implements CommandExecutor
         {
             if (args.length != 1)
             {
-                sender.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Must specify gatename!");
+                messageUtils.sendMessage("Must specify gatename!", sender);
                 return true;
             }
             if (dbFunctions.removeGateByName(args[0]))
             {
-                sender.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Stargate: " + args[0] + " successfully removed.");
+                messageUtils.sendMessage("Stargate: " + args[0] + " successfully removed.", sender);
                 return true;
             } else
             {
-                sender.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "No gate by that name found!");
+                messageUtils.sendMessage("No gate by that name found!", sender);
             }
             return true;
         }else
@@ -32,25 +33,25 @@ public class nxremove implements CommandExecutor
         {
             if(!dbFunctions.getGatebyName(args[0]).getOwner().equals(sender.getName()))
             {
-                sender.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "You do not have permission to remove a gate which you do not own!");
+                messageUtils.sendMessage("You do not have permission to remove a gate which you do not own!", sender);
                 return true;
             }
             if (args.length != 1)
             {
-                sender.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Must specify gatename!");
+                messageUtils.sendMessage("Must specify gatename!", sender);
                 return true;
             }
             if (dbFunctions.removeGateByName(args[0]))
             {
-                sender.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Stargate: " + args[0] + " successfully removed.");
+                messageUtils.sendMessage("Stargate: " + args[0] + " successfully removed.", sender);
                 return true;
             } else
             {
-                sender.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "No gate by that name found!");
+                messageUtils.sendMessage("No gate by that name found!", sender);
             }
             return true;
         }
-        else{sender.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "You do not have permission to use that command!");}
+        else{messageUtils.sendMessage("You do not have permission to use that command!", sender);}
 
         return true;
     }

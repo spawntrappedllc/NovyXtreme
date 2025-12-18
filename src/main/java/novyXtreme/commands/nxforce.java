@@ -2,6 +2,7 @@ package novyXtreme.commands;
 
 import novyXtreme.NovyXtreme;
 import novyXtreme.utils.dbFunctions;
+import novyXtreme.utils.messageUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -15,7 +16,7 @@ public class nxforce implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission("novyxtreme.debug")) {
-            sender.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "You do not have permission to use that command!");
+            messageUtils.sendMessage("You do not have permission to use that command!", sender);
             return true;
         }
         // TODO Pretty sure this isn't required anymore since the active stargate

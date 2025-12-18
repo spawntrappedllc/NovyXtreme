@@ -6,6 +6,7 @@ import novyXtreme.NovyXtreme;
 import novyXtreme.Stargate;
 import novyXtreme.utils.activationUtil;
 import novyXtreme.utils.dbFunctions;
+import novyXtreme.utils.messageUtils;
 import novyXtreme.utils.stargateUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -33,7 +34,7 @@ public class nxcomplete implements CommandExecutor {
             Player p = (Player) sender;
             //Player has not activated a stargate:
             if (!p.hasMetadata("NxCompleteActive")) {
-                p.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "You have not activated a stargate.");
+                messageUtils.sendMessage("You have not activated a stargate.", p);
                 return true;
             }
 
@@ -50,10 +51,9 @@ public class nxcomplete implements CommandExecutor {
 
             //Check gatename is alphanumeric (I'm not dumb enough to forget this and have some kid do a JSON injection and wipe the entire database right?.. RIGHT?)
             if (!GateName.matches("^[a-zA-Z0-9_-]+$")) {
-                p.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Gate name can only contain letters, numbers, hyphens, and underscores.");
+                messageUtils.sendMessage("Gate name can only contain letters, numbers, hyphens, and underscores.", p);
                 return true;
             }
-
 
             // Stargate limit
             int defaultMax = plugin.getConfig().contains("MaxStargatesPerPlayer")
@@ -72,8 +72,7 @@ public class nxcomplete implements CommandExecutor {
 
             int owned = dbFunctions.getStargateCountByOwner(p.getName());
             if (!bypassPermission && owned >= allowed) {
-                p.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY
-                        + "You already own the maximum number of stargates (" + allowed + ").");
+                messageUtils.sendMessage("You already own the maximum number of stargates (" + allowed + ").", p);
                 return true;
             }
 
@@ -87,18 +86,18 @@ public class nxcomplete implements CommandExecutor {
             if (dbFunctions.getGatebyName(GateName) == null) {
                 if(closestStargate != null){
                     if (closestStargate.getTpCoordinates().distance(teleportBlock) < minimumStargateDistance){
-                        p.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Stargate is too close to another gate");
+                        messageUtils.sendMessage("Stargate is too close to another gate", p);
                         return true;
                     }
                 }
-                p.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Stargate successfully created!");
+                messageUtils.sendMessage("Stargate successfully created!", p);
                 Stargate newStargate = new Stargate(GateName, p.getName(), leverblock.getLocation(), leverBlockData.getFacing());
                 activationUtil.nxcompleteEnd(p);
                 return true;
 
             } else {
                 //Gatename already exists
-                p.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "There is already a gate by that name!");
+                messageUtils.sendMessage("There is already a gate by that name!", p);
             }
 
 

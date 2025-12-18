@@ -7,6 +7,7 @@ import novyXtreme.Listeners.portalEnterListener;
 import novyXtreme.Listeners.portalTeleportListener;
 import novyXtreme.commands.*;
 import novyXtreme.utils.dbFunctions;
+import novyXtreme.utils.messageUtils;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.util.logging.Logger;
@@ -28,6 +29,7 @@ public final class NovyXtreme extends JavaPlugin {
         plugin = this;
         getConfig().options().copyDefaults();
         saveDefaultConfig();
+        messageUtils.init(this);
         getServer().getPluginManager().registerEvents(new portalTeleportListener(), this);
         getServer().getPluginManager().registerEvents(new gateLeverListener(), this);
         getServer().getPluginManager().registerEvents(new portalEnterListener(), this);

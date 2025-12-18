@@ -9,6 +9,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import novyXtreme.utils.dbFunctions;
+import novyXtreme.utils.messageUtils;
 
 public class dial implements CommandExecutor
 {
@@ -32,15 +33,15 @@ public class dial implements CommandExecutor
                         dbFunctions.removeAllGatesForOwnerExcept(player.getName(), entranceGate.getName());
                     }
 
-                    if(args.length != 1){sender.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Must specify stargate name!"); return true;}
-                    if(entranceGate.getDestinationGate() != null){player.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "You already have an active portal!");return true;}
+                    if(args.length != 1){messageUtils.sendMessage("Must specify stargate name!", player); return true;}
+                    if(entranceGate.getDestinationGate() != null){messageUtils.sendMessage("You already have an active portal!", player);return true;}
                     Stargate destinationStargate = dbFunctions.getGatebyName(args[0]);
-                    if(destinationStargate == entranceGate){player.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Destination gate cannot be origin gate"); return true;}
-                    if(destinationStargate == null){player.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "No gate by that name found"); return true;}
-                    if(destinationStargate.isActive()){player.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "That gate is currently in use!"); return true;}
+                    if(destinationStargate == entranceGate){messageUtils.sendMessage("Destination gate cannot be origin gate", player); return true;}
+                    if(destinationStargate == null){messageUtils.sendMessage("No gate by that name found", player); return true;}
+                    if(destinationStargate.isActive()){messageUtils.sendMessage("That gate is currently in use!", player); return true;}
                     if(!gateValidation.checkTestStargate(gateValidation.buildTestGate(destinationStargate.getLeverBlock(), destinationStargate.getGateOrientation())))
                     {
-                        sender.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Destination gate no longer exists");
+                        messageUtils.sendMessage("Destination gate no longer exists", player);
                         dbFunctions.removeGateByName(destinationStargate.getName());
                         return true;
                     }
@@ -56,12 +57,12 @@ public class dial implements CommandExecutor
                     destinationStargate.setActivatedby(sender.getName());
                     entranceGate.setPortal(true, destinationStargate);
 
-                    player.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Portal Connected!");
+                    messageUtils.sendMessage("Portal Connected!", player);
                     destinationStargate.setTimesVisited(destinationStargate.getTimesVisited()+1);
 
                 } else
                 {
-                    sender.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "You have not activated a stargate!");
+                    messageUtils.sendMessage("You have not activated a stargate!", player);
                 }
 
             }
