@@ -258,13 +258,13 @@ public class stargateUtils
     public static void promptDial(Player player, Stargate stargate)
     {
         activationUtil.activateGate(stargate, player);
-        player.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "/dial [gatename]");
+        messageUtils.sendMessage("/dial [gatename]", player);
     }
     public static void promptNxComplete(Player player, Block leverblock)
     {
         Plugin plugin = NovyXtreme.getPlugin(NovyXtreme.class);
         int stargateCost = plugin.getConfig().getInt("StargateCost");
-        player.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "/nxcomplete [gatename]");
+        messageUtils.sendMessage("/nxcomplete [gatename]", player);
         if(stargateCost>0){player.sendMessage(ChatColor.RED + "[WARNING]" + ChatColor.GRAY + ": " + stargateCost + "p Will be deducted from your account upon gate completion");}
         activationUtil.nxcompleteStart(leverblock,player);
     }

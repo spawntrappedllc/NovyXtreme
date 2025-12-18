@@ -2,6 +2,7 @@ package novyXtreme.tasks;
 
 import novyXtreme.NovyXtreme;
 import novyXtreme.utils.activationUtil;
+import novyXtreme.utils.messageUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -22,7 +23,7 @@ public class nxCompleteTimeout extends BukkitRunnable
     {
         if (player.hasMetadata("NxCompleteActive"))
         {
-            player.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "NxComplete Timed out");
+            messageUtils.sendMessage("NxComplete Timed out", player);
             activationUtil.nxcompleteEnd(player);
         }
     }

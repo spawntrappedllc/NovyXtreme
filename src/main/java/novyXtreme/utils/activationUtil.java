@@ -24,12 +24,12 @@ public class activationUtil
 
         if(!stargate.setActive(true))
         {
-            player.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Gate structure no longer valid.. Please reconstruct and reactivate.");
+            messageUtils.sendMessage("Gate structure no longer valid.. Please reconstruct and reactivate.", player);
             dbFunctions.removeGateByName(stargate.getName());
             return;
         }
 
-        player.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Stargate Activated!");
+        messageUtils.sendMessage("Stargate Activated!", player);
        // player.setMetadata("StargateActive", new FixedMetadataValue(NovyXtreme.getPlugin(), stargate.getName()));
         stargate.setActivatedby(player.getName());
         BukkitTask gateTimeout = new stargateTimeout(NovyXtreme.getPlugin(), stargate, player).runTaskLater(NovyXtreme.getPlugin(), stargateActiveTimeout);
@@ -60,7 +60,7 @@ public class activationUtil
     {
         if(!stargate.setActive(false))
         {
-            player.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Gate structure no longer valid.. Please reconstruct and reactivate.");
+            messageUtils.sendMessage("Gate structure no longer valid.. Please reconstruct and reactivate.", player);
             dbFunctions.removeGateByName(stargate.getName());
             return;
         }

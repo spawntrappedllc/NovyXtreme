@@ -3,6 +3,7 @@ package novyXtreme.tasks;
 import novyXtreme.NovyXtreme;
 import novyXtreme.Stargate;
 import novyXtreme.utils.activationUtil;
+import novyXtreme.utils.messageUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -27,7 +28,7 @@ public class stargateTimeout extends BukkitRunnable
             {
                 activationUtil.deactivateGate(stargate, player);
                 //stargate.setActive(false);
-                player.sendMessage(ChatColor.DARK_PURPLE + "[NovyXTreme]: " + ChatColor.GRAY + "Stargate: " + stargate.getName() + " Timed out");
+                messageUtils.sendMessage("Stargate: " + stargate.getName() + " Timed out", player);
                 //watch for crossthread issue
             }
 
