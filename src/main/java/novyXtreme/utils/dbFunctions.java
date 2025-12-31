@@ -189,6 +189,12 @@ public class dbFunctions {
     public static void removeAllGatesForOwnerExcept(String ownerName, String keepGateName) {
         if (ownerName == null) return;
 
+        removeAllGatesForOwnerExcept(ownerName, keepGateName, true);
+    }
+
+    public static void removeAllGatesForOwnerExcept(String ownerName, String keepGateName, boolean doNotify) {
+        if (ownerName == null) return;
+
         Iterator<Stargate> it = stargates.iterator();
         while (it.hasNext()) {
             Stargate s = it.next();
@@ -208,12 +214,14 @@ public class dbFunctions {
                 } catch (Exception ignored) {}
 
                 // inform player
-                Player owner = Bukkit.getPlayer(s.getOwner());
-                if (owner != null) {
-                    messageUtils.sendMessage(
-                            "One of your extra stargates (" + s.getName() + ") was removed because you no longer have premium.",
-                            owner
-                    );
+                if (doNotify) {
+                    Player owner = Bukkit.getPlayer(s.getOwner());
+                    if (owner != null) {
+                        messageUtils.sendMessage(
+                                "One of your extra stargates (" + s.getName() + ") was removed because you no longer have premium.",
+                                owner
+                        );
+                    }
                 }
                 it.remove();
             }

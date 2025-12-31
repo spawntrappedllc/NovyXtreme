@@ -1,6 +1,7 @@
 package novyXtreme.commands;
 
 
+import novyXtreme.NovyXtreme;
 import novyXtreme.Stargate;
 import novyXtreme.utils.gateValidation;
 import org.bukkit.ChatColor;
@@ -10,9 +11,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import novyXtreme.utils.dbFunctions;
 import novyXtreme.utils.messageUtils;
+import org.bukkit.plugin.Plugin;
 
 public class dial implements CommandExecutor
 {
+    Plugin plugin = NovyXtreme.getPlugin(NovyXtreme.class);
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
         {
@@ -25,12 +29,26 @@ public class dial implements CommandExecutor
                 entranceGate = dbFunctions.getActivatedGate(sender.getName());
                 if(entranceGate != null)
                 {
+
+                    //TODO: do something about this duplication (code duplicated from nxcomplete)
+                    // Stargate limit
+                    int defaultMax = plugin.getConfig().contains("MaxStargatesPerPlayer")
+                            ? plugin.getConfig().getInt("MaxStargatesPerPlayer")
+                            : 1;
+
+                    int maxPremium = plugin.getConfig().contains("MaxPremiumStargatesPerPlayer")
+                            ? plugin.getConfig().getInt("MaxPremiumStargatesPerPlayer")
+                            : 3;
+
+                    boolean bypassPermission = player.hasPermission("novyxtreme.bypass.maxstargates");
                     boolean hasPremium = player.hasPermission("novyxtreme.premium");
 
-                    if (!hasPremium
-                            && entranceGate.getOwner() != null
-                            && entranceGate.getOwner().equalsIgnoreCase(player.getName())) {
-                        dbFunctions.removeAllGatesForOwnerExcept(player.getName(), entranceGate.getName());
+                    // choose the allowed amount depending on premium
+                    int allowed = hasPremium ? maxPremium : defaultMax;
+                    int owned = dbFunctions.getStargateCountByOwner(player.getName());
+                    if (!bypassPermission && owned > allowed) {
+                        messageUtils.sendMessage("Your premium subscription has expired. Please pick a gate to keep using /nxkeep", player);
+                        return true;
                     }
 
                     if(args.length != 1){messageUtils.sendMessage("Must specify stargate name!", player); return true;}

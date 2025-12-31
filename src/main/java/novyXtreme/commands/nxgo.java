@@ -12,23 +12,29 @@ import org.bukkit.entity.Player;
 public class nxgo implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = ((Player) sender).getPlayer();
-            if (player.hasPermission("novyxtreme.nxgo")) {
-                try {
-                    Stargate destinationStargate = dbFunctions.getGatebyName(args[0]);
-                    // temp fix for tp issue, add 1 to facing direction
-                    ((Player) sender).teleport(destinationStargate.getTpCoordinates());
-                    // disable visit count when using /nxgo
-                    //destinationStargate.setTimesVisited(destinationStargate.getTimesVisited() + 1);
-
-                } catch (NullPointerException e) {
-                    messageUtils.sendMessage("No gate by that name found!", player);
-                }
-            } else {
-                messageUtils.sendMessage("You do not have permission to use that command!", player);
-            }
+        if (!(sender instanceof Player)) {
+            return true;
         }
+
+        Player player = (Player) sender;
+
+        if (!player.hasPermission("novyxtreme.nxgo")) {
+            messageUtils.sendMessage("You do not have permission to use that command!", player);
+            return true;
+        }
+        if (args.length < 1) {
+            messageUtils.sendMessage("Usage: /nxgo [gatename]", player);
+            return true;
+        }
+
+        Stargate destinationStargate = dbFunctions.getGatebyName(args[0]);
+
+        if (destinationStargate == null) {
+            messageUtils.sendMessage("No gate by that name found!", player);
+            return true;
+        }
+
+        player.teleport(destinationStargate.getTpCoordinates());
         return true;
     }
 }

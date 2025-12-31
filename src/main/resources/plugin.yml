@@ -6,7 +6,7 @@ depend:
   - EconomyPlus
 
 api-version: 1.19
-authors: [ Dograffe ]
+authors: [ Dograffe, parknich ]
 description: Main Project for Stargate Remake
 commands:
   nxcomplete:
@@ -17,6 +17,9 @@ commands:
     usage: /<command>
   nxgo:
     description: sends player to given stargate
+    usage: /<command>
+  nxkeep:
+    description: remove all stargates except for given gate
     usage: /<command>
   nxlist:
     description: lists all stargates

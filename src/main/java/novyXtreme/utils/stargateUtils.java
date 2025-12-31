@@ -262,10 +262,7 @@ public class stargateUtils
     }
     public static void promptNxComplete(Player player, Block leverblock)
     {
-        Plugin plugin = NovyXtreme.getPlugin(NovyXtreme.class);
-        int stargateCost = plugin.getConfig().getInt("StargateCost");
         messageUtils.sendMessage("/nxcomplete [gatename]", player);
-        if(stargateCost>0){player.sendMessage(ChatColor.RED + "[WARNING]" + ChatColor.GRAY + ": " + stargateCost + "p Will be deducted from your account upon gate completion");}
         activationUtil.nxcompleteStart(leverblock,player);
     }
     public static void forceBlockUpdate(Location location)
