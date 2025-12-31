@@ -3,4 +3,5 @@ MaxPremiumStargatesPerPlayer: 3
 MinimumStargateDistance: 30
 Active-Stargate-Timeout-Ticks: 800
 chat:
+  use-minimessage: false
   prefix: "&5[NovyXTreme]&7 "

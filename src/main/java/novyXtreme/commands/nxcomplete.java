@@ -72,7 +72,10 @@ public class nxcomplete implements CommandExecutor {
 
             int owned = dbFunctions.getStargateCountByOwner(p.getName());
             if (!bypassPermission && owned >= allowed) {
-                messageUtils.sendMessage("You already own the maximum number of stargates (" + allowed + ").", p);
+                String message = "You already own the maximum number of stargates (" + allowed + ")."
+                        + (hasPremium ? "" : " Buy premium to get 3 slots.");
+
+                messageUtils.sendMessage(message, p);
                 return true;
             }
 
@@ -94,13 +97,10 @@ public class nxcomplete implements CommandExecutor {
                 Stargate newStargate = new Stargate(GateName, p.getName(), leverblock.getLocation(), leverBlockData.getFacing());
                 activationUtil.nxcompleteEnd(p);
                 return true;
-
             } else {
                 //Gatename already exists
                 messageUtils.sendMessage("There is already a gate by that name!", p);
             }
-
-
         }
         return true;
     }

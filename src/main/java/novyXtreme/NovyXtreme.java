@@ -79,6 +79,4 @@ public final class NovyXtreme extends JavaPlugin {
         }
 
     }
-
-
 }
