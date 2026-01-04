@@ -14,18 +14,19 @@ import org.bukkit.block.data.Directional;
 
 public class Stargate
 {
-   private String name;
-   private String owner;
-   private Location leverBlock;
-   private BlockFace facing;
-   private Location tpCoordinates;
-   private transient boolean isActive;
-   private Location portalBlocks[];
-   private Location signBlockLocation;
-   private Location irisBlocks[];
-   private transient Stargate destinationGate;
-   private int timesVisited;
-   private String activatedby;
+    private String name;
+    private String owner;
+    private transient Location leverBlock;
+    private BlockFace facing;
+    private Location tpCoordinates;
+    private transient boolean isActive;
+    private boolean locked = false;
+    private transient Location portalBlocks[];
+    private Location signBlockLocation;
+    private Location irisBlocks[];
+    private transient Stargate destinationGate;
+    private int timesVisited;
+    private String activatedby;
 
     public Stargate(String name, String owner, Location leverBlock, BlockFace facing) {
         this.name = name;
@@ -71,9 +72,16 @@ public class Stargate
     public int getTimesVisited(){return timesVisited;}
     public void setTimesVisited(int timesVisited){this.timesVisited = timesVisited;}
     public void setActivatedby(String playername){this.activatedby= playername;}
+    public boolean isLocked() { return locked; }
+    public void setLocked(boolean locked)
+    {
+        this.locked = locked;
+        updateGateSign();
+    }
+
     public void createGateSign()
     {
-       Block signBlock = signBlockLocation.getBlock();
+        Block signBlock = signBlockLocation.getBlock();
         signBlock.setType(Material.OAK_WALL_SIGN);
         Sign sign= (Sign) signBlock.getState();
         Directional signdata = (Directional) sign.getBlockData();
@@ -83,42 +91,59 @@ public class Stargate
         sign.setLine(2,"O:" + owner);
         sign.update(true, true);
     }
+
+    public void updateGateSign()
+    {
+        if (signBlockLocation == null) return;
+        Block signBlock = signBlockLocation.getBlock();
+        if (signBlock.getType() != Material.OAK_WALL_SIGN) return;
+        Sign sign = (Sign) signBlock.getState();
+        sign.setLine(1,"-" + name + "-");
+        sign.setLine(2,"O:" + owner);
+        if (locked) {
+            sign.setLine(3, "[LOCKED]");
+        } else {
+            sign.setLine(3, "");
+        }
+        sign.update(true, true);
+    }
+
     public boolean setActive(boolean active)
     {
-                if(active)
+        if(active)
+        {
+            for(Location irisBlockLocation : irisBlocks)
+            {
+                if(!irisBlockLocation.getBlock().getType().equals(Material.OBSIDIAN)){return false;}
+                irisBlockLocation.getBlock().setType(Material.GLOWSTONE);
+            }
+            dbFunctions.activeStargates.add(this);
+            if(this.destinationGate !=null)
+            {
+                dbFunctions.activeStargates.add(this.destinationGate);
+            }
+        } else
+        {
+            for(Location irisBlockLocation : irisBlocks)
+            {
+                if(irisBlockLocation.getBlock().getType().equals(Material.GLOWSTONE))
                 {
-                    for(Location irisBlockLocation : irisBlocks)
-                    {
-                        if(!irisBlockLocation.getBlock().getType().equals(Material.OBSIDIAN)){return false;}
-                        irisBlockLocation.getBlock().setType(Material.GLOWSTONE);
-                    }
-                    dbFunctions.activeStargates.add(this);
-                    if(this.destinationGate !=null)
-                    {
-                        dbFunctions.activeStargates.add(this.destinationGate);
-                    }
-                } else
-                    {
-                        for(Location irisBlockLocation : irisBlocks)
-                        {
-                            if(irisBlockLocation.getBlock().getType().equals(Material.GLOWSTONE))
-                            {
-                                irisBlockLocation.getBlock().setType(Material.OBSIDIAN);
-                            }
+                    irisBlockLocation.getBlock().setType(Material.OBSIDIAN);
+                }
 
-                        }
-                       // stargateUtils.forceBlockUpdate(getPortalBlocks()[0]);
-                        this.setActivatedby(null);
-                        dbFunctions.activeStargates.remove(this);
-                        dbFunctions.activeStargates.remove(this.destinationGate);
+            }
+            // stargateUtils.forceBlockUpdate(getPortalBlocks()[0]);
+            this.setActivatedby(null);
+            dbFunctions.activeStargates.remove(this);
+            dbFunctions.activeStargates.remove(this.destinationGate);
 
-                        if(this.getDestinationGate() != null)
-                        {
-                            this.getDestinationGate().setActive(false);
-                            this.setDestinationGate(null);
-                        }
-                        if(!gateValidation.checkTestStargate(gateValidation.buildTestGate(this.getLeverBlock(), this.getGateOrientation()))){return false;}
-                    }
+            if(this.getDestinationGate() != null)
+            {
+                this.getDestinationGate().setActive(false);
+                this.setDestinationGate(null);
+            }
+            if(!gateValidation.checkTestStargate(gateValidation.buildTestGate(this.getLeverBlock(), this.getGateOrientation()))){return false;}
+        }
 
         isActive = active;
         //activate/deactivate  iris blocks

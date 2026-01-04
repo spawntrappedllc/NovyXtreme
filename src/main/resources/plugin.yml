@@ -21,6 +21,9 @@ commands:
   nxkeep:
     description: remove all stargates except for given gate
     usage: /<command>
+  nxlock:
+    description:  lock a stargate
+    usage: /<command>
   nxlist:
     description: lists all stargates
     usage: /<command>

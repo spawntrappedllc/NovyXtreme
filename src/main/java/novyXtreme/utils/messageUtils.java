@@ -20,11 +20,40 @@ public class messageUtils {
         boolean useMini = plugin.getConfig().getBoolean("chat.use-minimessage", false);
         //todo: less duplication
         if (useMini) {
-            Component prefix = MiniMessage.miniMessage().deserialize(
-                    plugin.getConfig().getString("chat.prefix", "<dark_purple>[NovyXTreme]</dark_purple><gray> ")
-            );
-            Component content = MiniMessage.miniMessage().deserialize(message);
-            sender.sendMessage(prefix.append(content));
+            try {
+                String prefixConfig = plugin.getConfig().getString("chat.prefix", "<dark_purple>[NovyXTreme]</dark_purple><gray> ");
+
+                String convertedMessage = ChatColor.translateAlternateColorCodes('&', message)
+                        .replace("§0", "<black>")
+                        .replace("§1", "<dark_blue>")
+                        .replace("§2", "<dark_green>")
+                        .replace("§3", "<dark_aqua>")
+                        .replace("§4", "<dark_red>")
+                        .replace("§5", "<dark_purple>")
+                        .replace("§6", "<gold>")
+                        .replace("§7", "<gray>")
+                        .replace("§8", "<dark_gray>")
+                        .replace("§9", "<blue>")
+                        .replace("§a", "<green>")
+                        .replace("§b", "<aqua>")
+                        .replace("§c", "<red>")
+                        .replace("§d", "<light_purple>")
+                        .replace("§e", "<yellow>")
+                        .replace("§f", "<white>")
+                        .replace("§k", "<obf>")
+                        .replace("§l", "<bold>")
+                        .replace("§m", "<strikethrough>")
+                        .replace("§n", "<underlined>")
+                        .replace("§o", "<italic>")
+                        .replace("§r", "<reset>");
+
+                String fullMessage = prefixConfig + convertedMessage;
+                Component component = MINI_MESSAGE.deserialize(fullMessage);
+                sender.sendMessage(component);
+            } catch (net.kyori.adventure.text.minimessage.ParsingException e) {
+                plugin.getLogger().warning("MiniMessage parse failed: " + e.getMessage());
+                return;
+            }
         } else {
             String prefix = ChatColor.translateAlternateColorCodes(
                     '&',

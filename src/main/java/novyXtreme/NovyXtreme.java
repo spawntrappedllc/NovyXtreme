@@ -38,6 +38,7 @@ public final class NovyXtreme extends JavaPlugin {
         getCommand("nxlist").setExecutor(new nxlist());
         getCommand("nxcomplete").setExecutor(new nxcomplete());
         getCommand("nxkeep").setExecutor(new nxkeep());
+        getCommand("nxlock").setExecutor(new nxlock());
         getCommand("dial").setExecutor(new dial());
         getCommand("nxgo").setExecutor(new nxgo());
         getCommand("nxreload").setExecutor(new nxreload());

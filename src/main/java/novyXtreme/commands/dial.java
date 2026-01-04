@@ -63,6 +63,12 @@ public class dial implements CommandExecutor
                         dbFunctions.removeGateByName(destinationStargate.getName());
                         return true;
                     }
+
+                    if (destinationStargate.isLocked() && !player.hasPermission("novyxtreme.bypass.nxlock") && !player.getName().equalsIgnoreCase(destinationStargate.getOwner())) {
+                        messageUtils.sendMessage("No gate by that name found", player);
+                        return true;
+                    }
+
                     //TODO breaking a stargate after activating it then /dialing will not destroy gate allowing for floating portals
 
 
