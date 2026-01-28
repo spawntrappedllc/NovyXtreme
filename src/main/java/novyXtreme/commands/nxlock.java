@@ -27,7 +27,7 @@ public class nxlock implements CommandExecutor
 
         if (!player.hasPermission("novyxtreme.nxlock"))
         {
-            messageUtils.sendMessage("You do not have permission to use /nxlock", player);
+            messageUtils.sendMessage("You do not have permission to use that command!", player);
             return true;
         }
 

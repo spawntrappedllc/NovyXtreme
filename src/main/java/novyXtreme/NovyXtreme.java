@@ -33,15 +33,15 @@ public final class NovyXtreme extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new portalTeleportListener(), this);
         getServer().getPluginManager().registerEvents(new gateLeverListener(), this);
         getServer().getPluginManager().registerEvents(new portalEnterListener(), this);
-        getCommand("nxremove").setExecutor(new nxremove());
-        getCommand("nxforce").setExecutor(new nxforce());
-        getCommand("nxlist").setExecutor(new nxlist());
-        getCommand("nxcomplete").setExecutor(new nxcomplete());
-        getCommand("nxkeep").setExecutor(new nxkeep());
-        getCommand("nxlock").setExecutor(new nxlock());
+        getCommand("stremove").setExecutor(new nxremove());
+        getCommand("stforce").setExecutor(new nxforce());
+        getCommand("stlist").setExecutor(new nxlist());
+        getCommand("stcomplete").setExecutor(new nxcomplete());
+        getCommand("stkeep").setExecutor(new nxkeep());
+        getCommand("stlock").setExecutor(new nxlock());
         getCommand("dial").setExecutor(new dial());
-        getCommand("nxgo").setExecutor(new nxgo());
-        getCommand("nxreload").setExecutor(new nxreload());
+        getCommand("stgo").setExecutor(new nxgo());
+        getCommand("streload").setExecutor(new nxreload());
         try {
             dbFunctions.loadStargates();
         } catch (IOException e) {

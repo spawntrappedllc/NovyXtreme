@@ -262,7 +262,7 @@ public class stargateUtils
     }
     public static void promptNxComplete(Player player, Block leverblock)
     {
-        messageUtils.sendMessage("/nxcomplete [gatename]", player);
+        messageUtils.sendMessage("/stcomplete [gatename]", player);
         activationUtil.nxcompleteStart(leverblock,player);
     }
     public static void forceBlockUpdate(Location location)
