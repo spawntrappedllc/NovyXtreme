@@ -1,6 +1,5 @@
 package novyXtreme;
 
-import net.milkbowl.vault.economy.Economy;
 
 import novyXtreme.Listeners.gateLeverListener;
 import novyXtreme.Listeners.portalEnterListener;
@@ -21,8 +20,6 @@ public final class NovyXtreme extends JavaPlugin {
     public static NovyXtreme getPlugin() {
         return plugin;
     }
-
-    private static Economy econ = null;
 
     @Override
     public void onEnable() {
@@ -47,29 +44,8 @@ public final class NovyXtreme extends JavaPlugin {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        //VaultAPI setup
-        if (!setupEconomy()) {
-            System.out.println(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
-        }
-
-    }
-    //Set up economy based on Vault
-    private boolean setupEconomy() {
-        if (getServer().getPluginManager().getPlugin("Vault") == null) {
-            return false;
-        }
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if (rsp == null) {
-            return false;
-        }
-        econ = rsp.getProvider();
-        return econ != null;
     }
 
-    public static Economy getEconomy() {
-        return econ;
-    }
 
     @Override
     public void onDisable() {

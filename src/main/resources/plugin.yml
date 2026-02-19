@@ -1,9 +1,6 @@
 name: NovyXtreme
 version: '1.5.7'
 main: novyXtreme.NovyXtreme
-depend:
-  - Vault
-  - EconomyPlus
 
 api-version: 1.19
 authors: [ Dograffe, parknich ]

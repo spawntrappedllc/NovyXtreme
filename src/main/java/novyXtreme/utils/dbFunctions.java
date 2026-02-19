@@ -4,8 +4,6 @@ import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.google.gson.reflect.TypeToken;
-import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.economy.EconomyResponse;
 import novyXtreme.NovyXtreme;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

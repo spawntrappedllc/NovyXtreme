@@ -1,7 +1,5 @@
 package novyXtreme.commands;
 
-import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.economy.EconomyResponse;
 import novyXtreme.NovyXtreme;
 import novyXtreme.Stargate;
 import novyXtreme.utils.activationUtil;
