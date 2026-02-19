@@ -1,4 +1,5 @@
-# NovyXtreme
+
+# This fork was made with [spawntrapped.org](https://spawntrapped.org/) in mind. No support will be provided for it outside of that server and I encourage you to use the [original plugin](https://github.com/Dograffe/NovyXtreme)
 
 **NovyXtreme** is a re-make of the classic WormholeXtreme plugin, designed for use on Novylen - the oldest Minecraft server. This plugin allows players to create and use obsidian "Stargates" to teleport between locations across the server.
 
