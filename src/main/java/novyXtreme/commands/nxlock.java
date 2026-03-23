@@ -35,7 +35,7 @@ public class nxlock implements CommandExecutor
 
         if (args.length == 0)
         {
-            targetGate = dbFunctions.getActivatedGate(player.getName());
+            targetGate = dbFunctions.getActivatedGate(player.getUniqueId());
             if (targetGate == null)
             {
                 messageUtils.sendMessage("You have not activated a stargate!", player);

@@ -30,8 +30,8 @@ public class activationUtil
         }
 
         messageUtils.sendMessage("Stargate Activated!", player);
-       // player.setMetadata("StargateActive", new FixedMetadataValue(NovyXtreme.getPlugin(), stargate.getName()));
-        stargate.setActivatedby(player.getName());
+        // player.setMetadata("StargateActive", new FixedMetadataValue(NovyXtreme.getPlugin(), stargate.getName()));
+        stargate.setActivatedby(player.getUniqueId());
         BukkitTask gateTimeout = new stargateTimeout(NovyXtreme.getPlugin(), stargate, player).runTaskLater(NovyXtreme.getPlugin(), stargateActiveTimeout);
 
     }
@@ -69,16 +69,10 @@ public class activationUtil
         {
             for(Stargate activeGate: dbFunctions.activeStargates)
             {
-                try
-                {
-                    if (activeGate.getDestinationGate().getName().equals(stargate.getName())) {
-                        activeGate.setActive(false);
-                        break;
-                    }
-                }catch(NullPointerException e)
-                {
-
-
+                if (activeGate.getDestinationGate() != null
+                        && activeGate.getDestinationGate().getName().equals(stargate.getName())) {
+                    activeGate.setActive(false);
+                    break;
                 }
             }
         }
@@ -94,12 +88,5 @@ public class activationUtil
     public static void nxcompleteEnd(Player player)
     {
         player.removeMetadata("NxCompleteActive", NovyXtreme.getPlugin());
-    }
-    public static void createWhoosh(Stargate stargate){
-        // TODO Need to allow the player to opt out of whoosh (check for players in radius with player metadata)
-        // Whooshed/partially whooshed blocks should be a function of portal block's width and height and facing direction
-        // TODO create particle effects at gate center
-        //
-
     }
 }

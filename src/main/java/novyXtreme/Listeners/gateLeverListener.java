@@ -50,7 +50,7 @@ public class gateLeverListener implements Listener {
                     dbFunctions.removeGateByName(stargate.getName());
                     return;
                 }
-                if (dbFunctions.getActivatedGate(player.getName()) != null) {
+                if (dbFunctions.getActivatedGate(player.getUniqueId()) != null) {
                     messageUtils.sendMessage("You may only have one active stargate at a time!", player);
                     return;
                 }

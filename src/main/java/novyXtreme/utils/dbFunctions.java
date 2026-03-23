@@ -82,7 +82,7 @@ public class dbFunctions {
                         "  facing       VARCHAR(16)," +
                         "  times_visited INT         NOT NULL DEFAULT 0," +
                         "  locked       TINYINT(1)   NOT NULL DEFAULT 0," +
-                        "  activated_by VARCHAR(64)" +
+                        "  activated_by CHAR(36)" +
                         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
 
         try (Connection conn = getConnection();
@@ -141,14 +141,19 @@ public class dbFunctions {
 
                     gate.setTimesVisited(rs.getInt("times_visited"));
                     gate.setLockedSilent(rs.getBoolean("locked"));
-                    gate.setActivatedby(rs.getString("activated_by"));
+
+                    String activatedBy = rs.getString("activated_by");
+                    if (activatedBy != null) {
+                        try { gate.setActivatedby(UUID.fromString(activatedBy)); }
+                        catch (IllegalArgumentException ignored) {}
+                    }
 
                     //get from lever pos
                     if (gate.getLeverBlock() != null && gate.getFacing() != null) {
-                        try { gate.setTpCoordinates(stargateUtils.calcTeleportBlock(gate.getLeverBlock(), gate.getFacing())); }  catch (Throwable ignored) {}
+                        try { gate.setTpCoordinates(stargateUtils.calcTeleportBlock(gate.getLeverBlock(), gate.getFacing())); }       catch (Throwable ignored) {}
                         try { gate.setSignBlockLocation(stargateUtils.calcGateSignLocation(gate.getLeverBlock(), gate.getFacing())); } catch (Throwable ignored) {}
-                        try { gate.setIrisBlocks(stargateUtils.calcIrisBlocks(gate.getLeverBlock(), gate.getFacing())); }           catch (Throwable ignored) {}
-                        try { gate.setPortalBlocks(stargateUtils.calcPortalBlocks(gate.getLeverBlock(), gate.getFacing())); }       catch (Throwable ignored) {}
+                        try { gate.setIrisBlocks(stargateUtils.calcIrisBlocks(gate.getLeverBlock(), gate.getFacing())); }              catch (Throwable ignored) {}
+                        try { gate.setPortalBlocks(stargateUtils.calcPortalBlocks(gate.getLeverBlock(), gate.getFacing())); }          catch (Throwable ignored) {}
                     }
 
                     stargates.add(gate);
@@ -171,17 +176,7 @@ public class dbFunctions {
             }
         }
 
-        String upsert =
-                "INSERT INTO stargates " +
-                        "  (name, owner, world, lever_x, lever_y, lever_z, lever_yaw, lever_pitch, " +
-                        "   facing, times_visited, locked, activated_by) " +
-                        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?) " +
-                        "ON DUPLICATE KEY UPDATE " +
-                        "  owner=VALUES(owner), world=VALUES(world), " +
-                        "  lever_x=VALUES(lever_x), lever_y=VALUES(lever_y), lever_z=VALUES(lever_z), " +
-                        "  lever_yaw=VALUES(lever_yaw), lever_pitch=VALUES(lever_pitch), " +
-                        "  facing=VALUES(facing), times_visited=VALUES(times_visited), " +
-                        "  locked=VALUES(locked), activated_by=VALUES(activated_by)";
+        String upsert = buildUpsertSql();
 
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(upsert)) {
@@ -190,19 +185,7 @@ public class dbFunctions {
                 try {
                     Location lever = gate.getLeverBlock();
                     if (lever == null || lever.getWorld() == null) continue;
-
-                    ps.setString (1,  gate.getName());
-                    ps.setString (2,  gate.getOwnerUuid().toString());
-                    ps.setString (3,  lever.getWorld().getName());
-                    ps.setDouble (4,  lever.getX());
-                    ps.setDouble (5,  lever.getY());
-                    ps.setDouble (6,  lever.getZ());
-                    ps.setFloat  (7,  lever.getYaw());
-                    ps.setFloat  (8,  lever.getPitch());
-                    ps.setString (9,  gate.getFacing() == null ? null : gate.getFacing().name());
-                    ps.setInt    (10, gate.getTimesVisited());
-                    ps.setBoolean(11, gate.isLocked());
-                    ps.setString (12, gate.getActivatedby());
+                    bindGate(ps, gate, lever);
                     ps.addBatch();
                 } catch (Throwable t) {
                     Bukkit.getLogger().log(Level.WARNING,
@@ -219,42 +202,46 @@ public class dbFunctions {
     private static void upsertGate(Stargate gate) {
         if (dataSource == null || gate == null) return;
 
-        String upsert =
-                "INSERT INTO stargates " +
-                        "  (name, owner, world, lever_x, lever_y, lever_z, lever_yaw, lever_pitch, " +
-                        "   facing, times_visited, locked, activated_by) " +
-                        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?) " +
-                        "ON DUPLICATE KEY UPDATE " +
-                        "  owner=VALUES(owner), world=VALUES(world), " +
-                        "  lever_x=VALUES(lever_x), lever_y=VALUES(lever_y), lever_z=VALUES(lever_z), " +
-                        "  lever_yaw=VALUES(lever_yaw), lever_pitch=VALUES(lever_pitch), " +
-                        "  facing=VALUES(facing), times_visited=VALUES(times_visited), " +
-                        "  locked=VALUES(locked), activated_by=VALUES(activated_by)";
-
         try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(upsert)) {
+             PreparedStatement ps = conn.prepareStatement(buildUpsertSql())) {
 
             Location lever = gate.getLeverBlock();
             if (lever == null || lever.getWorld() == null) return;
-
-            ps.setString (1,  gate.getName());
-            ps.setString (2,  gate.getOwnerUuid().toString());
-            ps.setString (3,  lever.getWorld().getName());
-            ps.setDouble (4,  lever.getX());
-            ps.setDouble (5,  lever.getY());
-            ps.setDouble (6,  lever.getZ());
-            ps.setFloat  (7,  lever.getYaw());
-            ps.setFloat  (8,  lever.getPitch());
-            ps.setString (9,  gate.getFacing() == null ? null : gate.getFacing().name());
-            ps.setInt    (10, gate.getTimesVisited());
-            ps.setBoolean(11, gate.isLocked());
-            ps.setString (12, gate.getActivatedby());
+            bindGate(ps, gate, lever);
             ps.executeUpdate();
 
         } catch (SQLException e) {
             Bukkit.getLogger().log(Level.WARNING,
                     "[NovyXtreme] Failed to upsert gate '" + gate.getName() + "' in DB.", e);
         }
+    }
+
+    private static String buildUpsertSql() {
+        return "INSERT INTO stargates " +
+                "  (name, owner, world, lever_x, lever_y, lever_z, lever_yaw, lever_pitch, " +
+                "   facing, times_visited, locked, activated_by) " +
+                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?) " +
+                "ON DUPLICATE KEY UPDATE " +
+                "  owner=VALUES(owner), world=VALUES(world), " +
+                "  lever_x=VALUES(lever_x), lever_y=VALUES(lever_y), lever_z=VALUES(lever_z), " +
+                "  lever_yaw=VALUES(lever_yaw), lever_pitch=VALUES(lever_pitch), " +
+                "  facing=VALUES(facing), times_visited=VALUES(times_visited), " +
+                "  locked=VALUES(locked), activated_by=VALUES(activated_by)";
+    }
+
+    private static void bindGate(PreparedStatement ps, Stargate gate, Location lever) throws SQLException {
+        ps.setString (1,  gate.getName());
+        ps.setString (2,  gate.getOwnerUuid().toString());
+        ps.setString (3,  lever.getWorld().getName());
+        ps.setDouble (4,  lever.getX());
+        ps.setDouble (5,  lever.getY());
+        ps.setDouble (6,  lever.getZ());
+        ps.setFloat  (7,  lever.getYaw());
+        ps.setFloat  (8,  lever.getPitch());
+        ps.setString (9,  gate.getFacing() == null ? null : gate.getFacing().name());
+        ps.setInt    (10, gate.getTimesVisited());
+        ps.setBoolean(11, gate.isLocked());
+        ps.setString (12, gate.getActivatedby() != null ? gate.getActivatedby().toString() : null);
     }
 
     public static void updateGateInDb(Stargate gate) {
@@ -277,9 +264,9 @@ public class dbFunctions {
         return stargates;
     }
 
-    public static Stargate getActivatedGate(String playerName) {
+    public static Stargate getActivatedGate(UUID playerUuid) {
         for (Stargate gate : activeStargates) {
-            if (playerName.equals(gate.getActivatedby())) return gate;
+            if (playerUuid.equals(gate.getActivatedby())) return gate;
         }
         return null;
     }
