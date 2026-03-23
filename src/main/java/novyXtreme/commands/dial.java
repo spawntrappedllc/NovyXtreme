@@ -64,7 +64,7 @@ public class dial implements CommandExecutor
                         return true;
                     }
 
-                    if (destinationStargate.isLocked() && !player.hasPermission("novyxtreme.bypass.nxlock") && !player.getUniqueId().toString().equals(destinationStargate.getOwnerUuid())) {
+                    if (destinationStargate.isLocked() && !player.hasPermission("novyxtreme.bypass.nxlock") && !player.getUniqueId().equals(destinationStargate.getOwnerUuid())) {
                         messageUtils.sendMessage("No gate by that name found", player);
                         return true;
                     }
