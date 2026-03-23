@@ -23,7 +23,7 @@ public class nxCompleteTimeout extends BukkitRunnable
     {
         if (player.hasMetadata("NxCompleteActive"))
         {
-            messageUtils.sendMessage("NxComplete Timed out", player);
+            messageUtils.sendMessage("StComplete Timed out", player);
             activationUtil.nxcompleteEnd(player);
         }
     }

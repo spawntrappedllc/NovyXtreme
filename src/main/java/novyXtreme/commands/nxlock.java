@@ -42,7 +42,7 @@ public class nxlock implements CommandExecutor
                 return true;
             }
 
-            if (!player.getName().equals(targetGate.getOwner()) && !player.hasPermission("novyxtreme.nxlock.others"))
+            if (!player.getUniqueId().equals(targetGate.getOwnerUuid()) && !player.hasPermission("novyxtreme.nxlock.others"))
             {
                 messageUtils.sendMessage("You don't own that gate.", player);
                 return true;
@@ -57,7 +57,7 @@ public class nxlock implements CommandExecutor
                 return true;
             }
 
-            if (!player.getName().equals(targetGate.getOwner()) && !player.hasPermission("novyxtreme.nxlock.others"))
+            if (!player.getUniqueId().equals(targetGate.getOwnerUuid()) && !player.hasPermission("novyxtreme.nxlock.others"))
             {
                 messageUtils.sendMessage("You don't own that gate.", player);
                 return true;

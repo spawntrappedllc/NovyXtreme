@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class nxremove implements CommandExecutor
 {
@@ -31,7 +32,7 @@ public class nxremove implements CommandExecutor
         }else
         if (sender.hasPermission("novyxtreme.nxremoveown"))
         {
-            if(!dbFunctions.getGatebyName(args[0]).getOwner().equals(sender.getName()))
+            if (!dbFunctions.getGatebyName(args[0]).getOwnerUuid().equals(((Player) sender).getUniqueId()))
             {
                 messageUtils.sendMessage("You do not have permission to remove a gate which you do not own!", sender);
                 return true;

@@ -17,7 +17,6 @@ import java.util.ArrayList;
 public class stargateUtils
 {
     Plugin plugin = NovyXtreme.getPlugin(NovyXtreme.class);
-    int stargateCost = plugin.getConfig().getInt("StargateCost");
 
     public static Location calcTeleportBlock(Location leverBlock, BlockFace leverBlockOrientation)
     {Location teleportBlock = null;

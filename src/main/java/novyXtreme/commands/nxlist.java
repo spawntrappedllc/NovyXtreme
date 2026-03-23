@@ -2,11 +2,14 @@ package novyXtreme.commands;
 
 import novyXtreme.utils.dbFunctions;
 import novyXtreme.utils.messageUtils;
-import org.bukkit.ChatColor;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 public class nxlist implements CommandExecutor {
     @Override
@@ -21,27 +24,26 @@ public class nxlist implements CommandExecutor {
                 if (args[0].contains("-v")) {
                     messageUtils.sendMessage(dbFunctions.getStargateListToStringVerbose(null), sender);
                 } else {
-                    messageUtils.sendMessage(dbFunctions.getStargateListFromOwner(args[0]), sender);
+                    messageUtils.sendMessage(dbFunctions.getStargateListFromOwner(nameToUuid(args[0])), sender);
                 }
                 //TODO check this args length is correct
             } else if (args.length > 1) {
                 if (args[0].contains("-v")) {
-                    messageUtils.sendMessage(dbFunctions.getStargateListToStringVerbose(args[0]), sender);
+                    messageUtils.sendMessage(dbFunctions.getStargateListToStringVerbose(nameToUuid(args[1])), sender);
                 } else if (args[1].contains("-v")) {
-                    messageUtils.sendMessage(dbFunctions.getStargateListFromOwnerVerbose(args[0]), sender);
+                    messageUtils.sendMessage(dbFunctions.getStargateListFromOwnerVerbose(nameToUuid(args[0])), sender);
                 } else {
-                    messageUtils.sendMessage(dbFunctions.getStargateListFromOwner(args[0]), sender);
+                    messageUtils.sendMessage(dbFunctions.getStargateListFromOwner(nameToUuid(args[0])), sender);
                 }
-
             }
             return true;
         } else if (sender.hasPermission("novyxtreme.nxlistown")) {
+            UUID senderUuid = ((Player) sender).getUniqueId();
             if (args.length >= 1 && args[0].contains("-v")) {
-                messageUtils.sendMessage(dbFunctions.getStargateListFromOwnerVerbose(sender.getName()), sender);
+                messageUtils.sendMessage(dbFunctions.getStargateListFromOwnerVerbose(senderUuid), sender);
             } else {
-                messageUtils.sendMessage(dbFunctions.getStargateListFromOwner(sender.getName()), sender);
+                messageUtils.sendMessage(dbFunctions.getStargateListFromOwner(senderUuid), sender);
             }
-            //dbFunctions.getStargateListToString();
             return true;
         } else {
             messageUtils.sendMessage("You do not have permission to use that command!", sender);
@@ -49,4 +51,8 @@ public class nxlist implements CommandExecutor {
         return true;
     }
 
+    private UUID nameToUuid(String playerName) {
+        OfflinePlayer op = Bukkit.getOfflinePlayer(playerName);
+        return op.getUniqueId();
+    }
 }

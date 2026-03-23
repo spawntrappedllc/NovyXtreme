@@ -45,9 +45,9 @@ public class dial implements CommandExecutor
 
                     // choose the allowed amount depending on premium
                     int allowed = hasPremium ? maxPremium : defaultMax;
-                    int owned = dbFunctions.getStargateCountByOwner(player.getName());
+                    int owned = dbFunctions.getStargateCountByOwner(player.getUniqueId());
                     if (!bypassPermission && owned > allowed) {
-                        messageUtils.sendMessage("Your premium subscription has expired. Please pick a gate to keep using /nxkeep", player);
+                        messageUtils.sendMessage("Your premium subscription has expired. Please pick a gate to keep, using /stkeep", player);
                         return true;
                     }
 
@@ -64,7 +64,7 @@ public class dial implements CommandExecutor
                         return true;
                     }
 
-                    if (destinationStargate.isLocked() && !player.hasPermission("novyxtreme.bypass.nxlock") && !player.getName().equalsIgnoreCase(destinationStargate.getOwner())) {
+                    if (destinationStargate.isLocked() && !player.hasPermission("novyxtreme.bypass.nxlock") && !player.getUniqueId().toString().equals(destinationStargate.getOwnerUuid())) {
                         messageUtils.sendMessage("No gate by that name found", player);
                         return true;
                     }

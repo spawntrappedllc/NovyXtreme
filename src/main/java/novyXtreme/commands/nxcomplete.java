@@ -68,7 +68,7 @@ public class nxcomplete implements CommandExecutor {
             // choose the allowed amount depending on premium
             int allowed = hasPremium ? maxPremium : defaultMax;
 
-            int owned = dbFunctions.getStargateCountByOwner(p.getName());
+            int owned = dbFunctions.getStargateCountByOwner(p.getUniqueId());
             if (!bypassPermission && owned >= allowed) {
                 String message = "You already own the maximum number of stargates (" + allowed + ")."
                         + (hasPremium ? "" : " Buy premium to get 3 slots.");
@@ -92,7 +92,7 @@ public class nxcomplete implements CommandExecutor {
                     }
                 }
                 messageUtils.sendMessage("Stargate successfully created!", p);
-                Stargate newStargate = new Stargate(GateName, p.getName(), leverblock.getLocation(), leverBlockData.getFacing());
+                Stargate newStargate = new Stargate(GateName, p.getUniqueId(), leverblock.getLocation(), leverBlockData.getFacing());
                 activationUtil.nxcompleteEnd(p);
                 return true;
             } else {

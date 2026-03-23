@@ -35,12 +35,12 @@ public class nxkeep implements CommandExecutor {
         }
 
         //verify ownership
-        if (!dbFunctions.isOwnedBy(player.getName(), keepGateName)) {
+        if (!dbFunctions.isOwnedBy(player.getUniqueId(), keepGateName)) {
             messageUtils.sendMessage("You do not own that stargate.", player);
             return true;
         }
 
-        dbFunctions.removeAllGatesForOwnerExcept(player.getName(), keepGateName, false);
+        dbFunctions.removeAllGatesForOwnerExcept(player.getUniqueId(), keepGateName, false);
 
         // inform player
         messageUtils.sendMessage("Kept gate: " + keepGateName + ". All other stargates you owned were removed.", player);

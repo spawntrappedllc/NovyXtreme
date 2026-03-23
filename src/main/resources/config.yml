@@ -5,3 +5,9 @@ Active-Stargate-Timeout-Ticks: 800
 chat:
   use-minimessage: false
   prefix: "&5[NovyXTreme]&7 "
+Database:
+  host: localhost
+  port: 3306
+  name: novyxtreme
+  username: root
+  password: ""
