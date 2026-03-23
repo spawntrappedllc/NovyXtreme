@@ -307,7 +307,9 @@ public class dbFunctions {
     }
 
     public static boolean removeGateByName(String gateName) {
-        for (Stargate gate : stargates) {
+        Iterator<Stargate> it = stargates.iterator();
+        while (it.hasNext()) {
+            Stargate gate = it.next();
             if (gate.getName().equals(gateName)) {
                 if (gate.isActive()) gate.setActive(false);
                 gate.getSignBlockLocation().getBlock().setType(Material.AIR);
@@ -317,7 +319,7 @@ public class dbFunctions {
                     messageUtils.sendMessage("Gate: " + gate.getName() + " destroyed", owner);
                 }
 
-                stargates.remove(gate);
+                it.remove();
                 deleteGateFromDb(gateName);
                 return true;
             }
